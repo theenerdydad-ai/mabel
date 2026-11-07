@@ -1,0 +1,363 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>MABEL</title>
+    <link rel="icon" href="/portal/static/assets/favicon.ico" sizes="any">
+    <link rel="stylesheet" href="/portal/static/portal.css?v=developer-shell-1">
+    <link rel="stylesheet" href="/portal/static/workspace.css?v=developer-tree-1">
+  </head>
+  <body>
+    <header class="app-header">
+      <button class="brand" type="button" data-view-target="workspace" aria-label="MABEL workspace" title="MABEL workspace">
+        <img class="brand-mark" src="/portal/static/assets/mabel-mark-square.png" alt="">
+        <span class="brand-wordmark">MABEL</span>
+      </button>
+      <nav class="primary-nav" aria-label="Portal sections">
+        <button class="nav-link" type="button" data-view-target="workspace" aria-current="page" title="Workspace">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 5.5h16M4 12h16M4 18.5h10M7 4v3M12 10.5v3M17 16.5v3"/></svg><span>Workspace</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="status" title="Environment status">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 19V9m7 10V5m7 14v-7"/><path d="M3.5 19.5h17"/></svg><span>Environment</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="connections" title="AMIE connections">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><circle cx="8" cy="8" r="3"/><circle cx="16" cy="16" r="3"/><path d="m10.2 10.2 3.6 3.6"/></svg><span>Connections</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="repositories" title="Context repositories">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M4 6.5A2.5 2.5 0 0 1 6.5 4H10l2 2.5h5.5A2.5 2.5 0 0 1 20 9v8.5a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 4 17.5z"/></svg><span>Repositories</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="capabilities" title="Capability Control Center">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M5 7.5h14M5 12h14M5 16.5h9"/><circle cx="17" cy="16.5" r="2"/></svg><span>Capabilities</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="workflow-executions" title="Workflow Executions">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M6 4h9l3 3v13H6z"/><path d="M9 11h6M9 15h6M9 7h3"/></svg><span>Workflow Executions</span>
+        </button>
+        <button class="nav-link" type="button" data-view-target="api-access" title="API and MCP access">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M14 7a4 4 0 1 0-4 4h10"/><path d="M15 11v4m3-4v3"/><circle cx="10" cy="7" r="1"/></svg><span>Access</span>
+        </button>
+      </nav>
+      <nav class="app-switcher" aria-label="Stack applications">
+        <span class="runtime-indicator"><i aria-hidden="true"></i><span>Runtime</span></span>
+        <a id="amie-app-link" class="header-utility" href="https://www.theenerdydad.com/ace/app" title="Open AMIE">AMIE</a>
+        <span class="header-utility current-app" aria-current="page">MABEL</span>
+        <button class="header-utility icon-utility" id="portal-logout" type="button" hidden title="Log out" aria-label="Log out">
+          <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M10 5H5v14h5M14 8l4 4-4 4M8 12h10"/></svg>
+        </button>
+      </nav>
+    </header>
+
+    <main class="portal-shell">
+      <p class="screen-reader-only" id="announcements" aria-live="polite"></p>
+
+      <section class="portal-view workspace-view" data-view="workspace" aria-labelledby="workspace-title">
+        <div class="workspace-heading">
+          <div class="workspace-context">
+            <span class="workspace-mode">Operational checkout</span>
+            <h1 id="workspace-title">Workspace</h1>
+            <p id="workspace-repository-name">Load the active MABEL context repository to inspect its validated projection.</p>
+          </div>
+          <div class="workspace-heading-actions">
+            <span class="commit-badge" id="workspace-commit" title="Exact repository commit">No projection</span>
+            <button class="tool-button" id="refresh-workspace" type="button" title="Refresh projection" aria-label="Refresh projection">
+              <svg aria-hidden="true" viewBox="0 0 24 24"><path d="M20 11a8 8 0 1 0 1.2 4.2M20 5v6h-6"/></svg>
+            </button>
+          </div>
+        </div>
+        <p class="workspace-toast" id="workspace-toast" role="status" hidden></p>
+        <div class="workspace-layout" id="workspace-layout" aria-busy="false">
+          <aside class="workspace-pane repository-pane" aria-labelledby="repository-tree-title">
+            <div class="workspace-pane-head">
+              <h2 id="repository-tree-title">Declared repository files</h2>
+              <span class="badge neutral" id="workspace-projection-status">Not loaded</span>
+            </div>
+            <label class="workspace-filter-label" for="workspace-filter">Filter declared files</label>
+            <input id="workspace-filter" type="search" placeholder="Search files" autocomplete="off">
+            <p class="workspace-muted" id="workspace-sync-time">Only files declared by the validated context manifest are included; this is not a complete checkout.</p>
+            <nav class="workspace-tree" id="workspace-tree" aria-label="Declared repository files"></nav>
+          </aside>
+
+          <section class="workspace-pane editor-pane" aria-labelledby="workspace-file-title">
+            <div class="workspace-pane-head editor-head">
+              <div>
+                <h2 id="workspace-file-title">Select a declared file</h2>
+                <p class="workspace-muted" id="workspace-file-meta">Editor is read-only in this milestone.</p>
+              </div>
+              <span class="readonly-badge">Read-only</span>
+            </div>
+            <div class="editor-host" id="workspace-editor" tabindex="0" aria-label="Read-only file editor">Choose a file from the declared repository tree.</div>
+          </section>
+
+          <aside class="workspace-side-stack" aria-label="Capability and execution panels">
+            <section class="workspace-pane capability-pane" aria-labelledby="capability-title">
+              <div class="workspace-pane-head">
+                <h2 id="capability-title">Capability</h2>
+                <span class="badge neutral" id="capability-status">Not selected</span>
+              </div>
+              <div id="capability-detail" class="capability-detail">
+                <p class="workspace-muted">Select a declared capability to inspect its runtime contract.</p>
+              </div>
+              <div class="capability-actions">
+                <button class="button" id="run-capability" type="button" disabled>Run</button>
+                <button class="button secondary" type="button" disabled title="A declared test-runner contract has not been implemented yet">Test · reserved</button>
+                <button class="button secondary" type="button" disabled title="Development worktrees are not implemented yet">Develop · reserved</button>
+              </div>
+            </section>
+            <section class="workspace-pane console-pane" aria-labelledby="console-title">
+              <div class="workspace-pane-head">
+                <h2 id="console-title">Execution console</h2>
+                <span class="badge neutral" id="console-status">Waiting</span>
+              </div>
+              <pre id="workspace-console" class="workspace-console">Run a selected capability to view its bounded execution report.</pre>
+            </section>
+          </aside>
+        </div>
+      </section>
+
+      <section class="portal-view" data-view="status" aria-labelledby="status-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Operational environment</p>
+            <h1 id="status-title">MABEL status</h1>
+            <p class="page-intro">A small view of the locally running operational environment.</p>
+          </div>
+          <button class="button secondary" id="refresh-status" type="button">Refresh</button>
+        </div>
+        <div class="status-grid">
+          <article class="status-card" aria-labelledby="runtime-card-title">
+            <div class="status-card-head">
+              <h2 id="runtime-card-title">Runtime</h2>
+              <span class="badge neutral" id="health-badge">Checking</span>
+            </div>
+            <p class="status-value" id="health-value">Checking MABEL health…</p>
+            <p class="status-meta" id="health-meta">The portal reads the existing health endpoint.</p>
+          </article>
+          <article class="status-card" aria-labelledby="connections-card-title">
+            <div class="status-card-head">
+              <h2 id="connections-card-title">Registered connections</h2>
+              <span class="badge neutral" id="connection-count">—</span>
+            </div>
+            <p class="status-value" id="connection-value">Loading connections…</p>
+            <p class="status-meta">Connections are scoped by MABEL’s current owner context.</p>
+          </article>
+          <article class="status-card" aria-labelledby="repositories-card-title">
+            <div class="status-card-head">
+              <h2 id="repositories-card-title">Context repositories</h2>
+              <span class="badge neutral" id="repository-count">—</span>
+            </div>
+            <p class="status-value" id="repository-value">Loading repositories…</p>
+            <p class="status-meta">The active repository is synchronized to a validated commit for declared capability execution.</p>
+          </article>
+        </div>
+      </section>
+
+      <section class="portal-view" data-view="api-access" aria-labelledby="api-access-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Machine access</p>
+            <h1 id="api-access-title">API &amp; MCP access</h1>
+            <p class="page-intro">Create one bearer token for API and MCP clients. MABEL shows its value only when it is created or regenerated.</p>
+          </div>
+        </div>
+        <section class="connection-form-card" aria-labelledby="api-token-title">
+          <div class="form-card-head">
+            <div>
+              <h2 id="api-token-title">MABEL API token</h2>
+              <p id="api-token-status">Checking token status…</p>
+            </div>
+          </div>
+          <p class="form-note">Use the token as <code>Authorization: Bearer mabel_…</code>. Generating a new token immediately invalidates the previous one.</p>
+          <div class="form-actions">
+            <button class="button" id="generate-api-token" type="button">Generate token</button>
+          </div>
+          <div class="test-result" id="issued-api-token" role="status" hidden>
+            <p><strong>Copy this token now.</strong> It will not be shown again.</p>
+            <code id="issued-api-token-value"></code>
+          </div>
+        </section>
+      </section>
+
+      <section class="portal-view" data-view="repositories" aria-labelledby="repositories-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Managed repositories</p>
+            <h1 id="repositories-title">MABEL context repositories</h1>
+            <p class="page-intro">Each repository owns a user's capability definitions and code. GitHub access is verified by trusted MABEL backend code.</p>
+          </div>
+          <button class="button" id="show-add-repository" type="button">Register context repository</button>
+        </div>
+
+        <section class="connection-form-card" id="repository-form-card" aria-labelledby="repository-form-title" hidden>
+          <div class="form-card-head">
+            <div>
+              <h2 id="repository-form-title">Register MABEL context repository</h2>
+              <p>GitHub · user operational context</p>
+            </div>
+            <button class="icon-button" id="cancel-repository-form" type="button" aria-label="Close repository form">×</button>
+          </div>
+          <form id="repository-form">
+            <div class="form-grid">
+              <label>
+                Display name
+                <input id="repository-display-name" autocomplete="off" required>
+              </label>
+              <label>
+                GitHub repository
+                <input id="repository-locator" autocomplete="off" placeholder="owner/repository" required>
+              </label>
+              <label>
+                Fine-grained GitHub token
+                <input id="repository-github-token" type="password" autocomplete="off" required>
+              </label>
+            </div>
+            <p class="form-note">The token is sent only to MABEL’s trusted backend to verify this repository, then encrypted separately from repository metadata.</p>
+            <div class="form-actions">
+              <button class="button secondary" id="cancel-repository-form-secondary" type="button">Cancel</button>
+              <button class="button" id="save-repository" type="submit">Verify and register</button>
+            </div>
+          </form>
+        </section>
+
+        <p class="feedback" id="repository-feedback" role="status" hidden></p>
+        <div class="management-columns" aria-hidden="true"><span>Name</span><span>Repository</span><span>Status</span><span></span></div>
+        <div class="connection-list" id="repository-list" aria-live="polite"></div>
+      </section>
+
+      <section class="portal-view" data-view="connections" aria-labelledby="connections-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Registered connections</p>
+            <h1 id="connections-title">AMIE connections</h1>
+            <p class="page-intro">MABEL stores AMIE connection metadata and encrypted API tokens separately.</p>
+          </div>
+          <button class="button" id="show-add-connection" type="button">Add connection</button>
+        </div>
+
+        <section class="connection-form-card" id="connection-form-card" aria-labelledby="connection-form-title" hidden>
+          <div class="form-card-head">
+            <div>
+              <h2 id="connection-form-title">Add connection</h2>
+              <p id="connection-form-hint">The current transport is AMIE over Streamable HTTP.</p>
+            </div>
+            <button class="icon-button" id="cancel-connection-form" type="button" aria-label="Close connection form">×</button>
+          </div>
+          <form id="connection-form">
+            <div class="form-grid">
+              <label>
+                Display name
+                <input id="connection-display-name" name="display_name" autocomplete="off" required>
+              </label>
+              <label>
+                Endpoint
+                <input id="connection-endpoint" name="endpoint" type="url" autocomplete="url" placeholder="https://amie.example/mcp" required>
+              </label>
+              <label>
+                AMIE API token <span class="optional">optional</span>
+                <input id="connection-amie-api-token" name="amie_api_token" type="password" autocomplete="off" placeholder="ace_…">
+              </label>
+              <label class="checkbox-field" id="clear-amie-api-token-wrap" hidden>
+                <input id="clear-amie-api-token" type="checkbox">
+                Remove the stored AMIE API token
+              </label>
+            </div>
+            <p class="form-note" id="credential-note">Generate this token in AMIE Settings → API access. MABEL encrypts it and uses it only for AMIE MCP requests.</p>
+            <div class="form-actions">
+              <button class="button secondary" id="cancel-connection-form-secondary" type="button">Cancel</button>
+              <button class="button" id="save-connection" type="submit">Save connection</button>
+            </div>
+          </form>
+        </section>
+
+        <p class="feedback" id="connection-feedback" role="status" hidden></p>
+        <div class="management-columns" aria-hidden="true"><span>Name</span><span>Endpoint</span><span>Status</span><span></span></div>
+        <div class="connection-list" id="connection-list" aria-live="polite"></div>
+      </section>
+
+      <section class="portal-view" data-view="capabilities" aria-labelledby="capabilities-title" hidden>
+        <div class="page-heading">
+          <div>
+            <p class="eyebrow">Capability Control Center</p>
+            <h1 id="capabilities-title">Capabilities</h1>
+            <p class="page-intro">Manage only the capabilities declared by your active, validated MABEL context repository.</p>
+          </div>
+          <button class="button secondary" id="refresh-capabilities" type="button">Refresh</button>
+        </div>
+        <p class="feedback" id="capability-feedback" role="status" hidden></p>
+        <div class="management-columns" aria-hidden="true"><span>Capability</span><span>Identifier</span><span>Status</span><span></span></div>
+        <div class="connection-list" id="capability-list" aria-live="polite"></div>
+      </section>
+
+      <section class="portal-view" data-view="workflow-executions" aria-labelledby="workflow-executions-title" hidden>
+        <div id="workflow-executions-list-view">
+          <div class="page-heading">
+            <div>
+              <p class="eyebrow">Workflow operations</p>
+              <h1 id="workflow-executions-title">Workflow Executions</h1>
+              <p class="page-intro">Most recently updated workflow state recorded by MABEL for your account.</p>
+            </div>
+            <button class="button secondary" id="refresh-workflow-executions" type="button">Refresh</button>
+          </div>
+          <p class="feedback" id="workflow-executions-feedback" role="status" hidden></p>
+          <div class="management-columns execution-columns" aria-hidden="true"><span>Workflow</span><span>Execution</span><span>Status</span><span>Updated</span></div>
+          <div class="connection-list" id="workflow-execution-list" aria-live="polite"></div>
+        </div>
+        <div id="workflow-execution-detail" hidden></div>
+      </section>
+    </main>
+
+    <template id="connection-template">
+      <article class="connection-card">
+        <button class="connection-head" type="button" aria-expanded="false">
+          <span class="connection-name"></span>
+          <span class="connection-endpoint"></span>
+          <span class="connection-state"></span>
+          <span class="connection-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="connection-detail" hidden>
+          <dl class="connection-details">
+            <div><dt>Type</dt><dd class="connection-type"></dd></div>
+            <div><dt>Transport</dt><dd class="connection-transport"></dd></div>
+            <div><dt>AMIE API token</dt><dd class="connection-credential"></dd></div>
+          </dl>
+          <div class="test-result" role="status" hidden></div>
+          <div class="connection-actions">
+            <button class="button secondary test-action" type="button">Test connection</button>
+            <button class="button secondary toggle-action" type="button"></button>
+            <button class="button secondary edit-action" type="button">Edit</button>
+            <button class="button danger delete-action" type="button">Delete</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <template id="repository-template">
+      <article class="connection-card">
+        <button class="connection-head" type="button" aria-expanded="false">
+          <span class="repository-name"></span>
+          <span class="repository-locator"></span>
+          <span class="repository-state"></span>
+          <span class="connection-chevron" aria-hidden="true">⌄</span>
+        </button>
+        <div class="connection-detail" hidden>
+          <dl class="connection-details">
+            <div><dt>Repository ID</dt><dd class="repository-provider-id"></dd></div>
+            <div><dt>Default branch</dt><dd class="repository-branch"></dd></div>
+            <div><dt>Credential</dt><dd>Configured</dd></div>
+          </dl>
+          <div class="test-result" role="status" hidden></div>
+          <div class="connection-actions">
+            <button class="button secondary repository-test-action" type="button">Test access</button>
+            <button class="button secondary repository-reconnect-action" type="button">Reconnect</button>
+            <button class="button secondary repository-toggle-action" type="button"></button>
+            <button class="button danger repository-delete-action" type="button">Delete</button>
+          </div>
+        </div>
+      </article>
+    </template>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/ace/1.32.0/ace.js" defer></script>
+    <script src="/portal/static/portal.js?v=0b75af1e30f0" defer></script>
+    <script src="/portal/static/workspace.js?v=developer-tree-1" defer></script>
+  </body>
+</html>

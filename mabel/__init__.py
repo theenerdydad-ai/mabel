@@ -1,0 +1,1 @@
+"""MABEL's application package."""

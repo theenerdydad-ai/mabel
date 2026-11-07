@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "system": {
+    "name": "MABEL",
+    "expansion": "Mundane Architecture, Boringly Effective Logic",
+    "role": "operational_runtime"
+  },
+  "instructions": {
+    "start": "instructions/start.md"
+  },
+  "schemas": {
+    "path": "schemas",
+    "manifest": "schemas/manifest.json"
+  }
+}

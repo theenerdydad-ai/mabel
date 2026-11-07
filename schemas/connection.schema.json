@@ -1,0 +1,32 @@
+{
+  "content_type": "connection",
+  "rules_path": "schemas/connection.rules.md",
+  "versions": [
+    {
+      "schema_version": "1.0",
+      "required": [
+        "id",
+        "owner_id",
+        "display_name",
+        "connection_type",
+        "transport",
+        "endpoint",
+        "enabled",
+        "created_at",
+        "updated_at"
+      ],
+      "fields": {
+        "id": {"type": "uuid"},
+        "owner_id": {"type": "string"},
+        "display_name": {"type": "string"},
+        "connection_type": {"type": "string"},
+        "transport": {"type": "string"},
+        "endpoint": {"type": "url"},
+        "credential_reference": {"type": "string", "nullable": true},
+        "enabled": {"type": "boolean"},
+        "created_at": {"type": "timestamp"},
+        "updated_at": {"type": "timestamp"}
+      }
+    }
+  ]
+}

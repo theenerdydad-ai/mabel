@@ -1,0 +1,29 @@
+{
+  "content_type": "managed_repository",
+  "rules_path": "schemas/managed-repository.rules.md",
+  "versions": [
+    {
+      "schema_version": "1.0",
+      "required": [
+        "id", "owner_id", "provider", "purpose", "display_name",
+        "provider_repository_id", "canonical_locator", "default_branch",
+        "credential_id", "status", "enabled", "created_at", "updated_at"
+      ],
+      "fields": {
+        "id": {"type": "uuid"},
+        "owner_id": {"type": "string"},
+        "provider": {"type": "string"},
+        "purpose": {"type": "string"},
+        "display_name": {"type": "string"},
+        "provider_repository_id": {"type": "string"},
+        "canonical_locator": {"type": "string"},
+        "default_branch": {"type": "string"},
+        "credential_id": {"type": "uuid", "visibility": "internal"},
+        "status": {"type": "string"},
+        "enabled": {"type": "boolean"},
+        "created_at": {"type": "timestamp"},
+        "updated_at": {"type": "timestamp"}
+      }
+    }
+  ]
+}

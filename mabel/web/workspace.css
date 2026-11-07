@@ -1,0 +1,83 @@
+/* The workspace is a developer workbench. It deliberately uses the full
+   viewport, compact toolbars, code-forward type, and structural separators. */
+.portal-shell.workspace-active,
+.portal-shell:has(.workspace-view:not([hidden])) { width: 100%; max-width: none; height: calc(100vh - 58px); margin: 0; padding: 0; }
+.workspace-view { display: grid; grid-template-rows: 54px minmax(0, 1fr); width: 100%; height: 100%; background: var(--panel); }
+.workspace-heading { display: flex; align-items: center; justify-content: space-between; gap: 1rem; min-width: 0; padding: 0 .9rem; border-bottom: 1px solid var(--line); background: #15171a; }
+.workspace-context { min-width: 0; display: flex; align-items: center; gap: .65rem; }
+.workspace-mode { color: var(--faint); font-size: .61rem; font-weight: 750; letter-spacing: .07em; text-transform: uppercase; white-space: nowrap; }
+.workspace-mode::after { content: ""; display: inline-block; width: 1px; height: 13px; margin-left: .65rem; vertical-align: -2px; background: var(--line); }
+.workspace-heading h1 { flex: 0 0 auto; font-size: .84rem; font-weight: 730; letter-spacing: -.1px; }
+.workspace-context p { min-width: 0; margin: 0; overflow: hidden; color: var(--muted); font: .72rem ui-monospace, SFMono-Regular, Menlo, monospace; text-overflow: ellipsis; white-space: nowrap; }
+.workspace-heading-actions { display: flex; align-items: center; gap: .45rem; }
+.commit-badge, .readonly-badge { display: inline-flex; align-items: center; min-height: 28px; padding: .28rem .5rem; border: 1px solid var(--line); border-radius: 6px; background: var(--panel-2); color: var(--muted); font: .68rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+.readonly-badge { color: #f0c983; background: var(--warning-soft); border-color: transparent; font-family: inherit; font-size: .65rem; font-weight: 700; }
+.workspace-toast { position: fixed; z-index: 10; right: 1rem; bottom: 1rem; max-width: min(30rem, calc(100vw - 2rem)); margin: 0; padding: .7rem .85rem; border: 1px solid var(--line); border-radius: 8px; background: var(--panel-3); color: var(--text); box-shadow: 0 14px 38px rgb(0 0 0 / 34%); font-size: .78rem; }
+.workspace-toast.error { border-color: rgb(209 106 99 / 55%); background: #3b2222; color: #ffb3ac; }
+
+.workspace-layout { display: grid; grid-template-columns: minmax(220px, 285px) minmax(400px, 1.55fr) minmax(275px, .9fr); min-height: 0; overflow: hidden; background: var(--panel); }
+.workspace-layout[aria-busy="true"] { cursor: progress; }
+.workspace-pane { min-width: 0; min-height: 0; background: var(--panel); }
+.workspace-pane + .workspace-pane, .workspace-side-stack { border-left: 1px solid var(--line); }
+.workspace-side-stack { display: grid; grid-template-rows: minmax(245px, .82fr) minmax(220px, 1fr); min-width: 0; }
+.workspace-side-stack .workspace-pane + .workspace-pane { border-top: 1px solid var(--line); border-left: 0; }
+.workspace-pane-head { min-height: 48px; display: flex; align-items: center; justify-content: space-between; gap: .6rem; padding: .65rem .8rem; border-bottom: 1px solid var(--line); background: #191b1f; }
+.workspace-pane-head h2 { font-size: .76rem; font-weight: 720; }
+.workspace-muted { margin: .55rem .8rem; color: var(--faint); font-size: .71rem; line-height: 1.45; }
+.workspace-filter-label { position: absolute; width: 1px; height: 1px; overflow: hidden; clip-path: inset(50%); }
+.repository-pane > input { width: calc(100% - 1.6rem); min-height: 34px; margin: .7rem .8rem 0; font-size: .76rem; }
+.workspace-tree { height: calc(100% - 133px); padding: .25rem .35rem .7rem; overflow: auto; }
+.workspace-tree-list { margin: 0; padding: 0; list-style: none; }
+.workspace-tree-list .workspace-tree-list { padding-left: .6rem; }
+.tree-file, .tree-directory { display: flex; align-items: center; width: 100%; min-height: 25px; gap: .32rem; padding: .18rem .32rem; border: 0; border-radius: 5px; background: transparent; color: var(--muted); font-size: .73rem; text-align: left; }
+.tree-file { cursor: pointer; }
+.tree-directory { cursor: pointer; color: var(--text); font-weight: 650; }
+.tree-chevron { flex: 0 0 10px; color: var(--faint); font-size: 1rem; line-height: 1; text-align: center; transform: rotate(0deg); transition: transform .12s ease; }
+.tree-directory[aria-expanded="true"] .tree-chevron { transform: rotate(90deg); }
+.tree-name { min-width: 0; overflow-wrap: anywhere; }
+.tree-type { flex: 0 0 auto; max-width: 7.5rem; margin-left: auto; overflow: hidden; color: var(--faint); font: .59rem ui-monospace, SFMono-Regular, Menlo, monospace; letter-spacing: .01em; text-overflow: ellipsis; white-space: nowrap; }
+.tree-file:hover, .tree-directory:hover { background: var(--hover); color: var(--text); }
+.tree-file:focus-visible, .tree-directory:focus-visible { outline: 1px solid var(--brand-focus); outline-offset: 1px; }
+
+.editor-pane { display: grid; grid-template-rows: 48px minmax(0, 1fr); }
+.editor-head .workspace-muted { margin: .22rem 0 0; font: .68rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+.editor-host { min-height: 0; height: 100%; padding: 0; overflow: auto; background: #111315; color: var(--muted); font: 13px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; }
+.editor-host:not(.ace_editor) { padding: 1rem; }
+.ace_editor { background: #111315 !important; }
+.ace-tomorrow-night .ace_gutter { background: #16191c !important; color: #6f777f !important; }
+.ace-tomorrow-night .ace_marker-layer .ace_active-line { background: rgb(255 255 255 / 3%) !important; }
+.ace-tomorrow-night .ace_gutter-active-line { background: rgb(255 255 255 / 3%) !important; }
+
+.capability-detail { padding: .8rem; }
+.capability-detail .workspace-muted { margin: 0; }
+.workspace-definition-list { display: grid; grid-template-columns: minmax(64px, auto) minmax(0, 1fr); gap: .4rem .65rem; margin: 0; }
+.workspace-definition-list dt { margin: 0; align-self: start; color: var(--faint); font-size: .61rem; }
+.workspace-definition-list dd { overflow-wrap: anywhere; color: var(--muted); font: .69rem ui-monospace, SFMono-Regular, Menlo, monospace; }
+.capability-actions { display: flex; flex-wrap: wrap; gap: .4rem; padding: 0 .8rem .8rem; }
+.capability-actions .button { min-height: 30px; padding: .4rem .58rem; font-size: .71rem; }
+.workspace-console { height: calc(100% - 48px); min-height: 0; margin: 0; padding: .8rem; overflow: auto; background: #111315; color: #c6d5cc; font: 11.5px/1.5 ui-monospace, SFMono-Regular, Menlo, monospace; white-space: pre-wrap; overflow-wrap: anywhere; }
+
+@media (max-width: 1060px) {
+  .workspace-layout { grid-template-columns: minmax(200px, 255px) minmax(340px, 1fr); overflow: auto; }
+  .workspace-side-stack { grid-column: 1 / -1; grid-template-columns: 1fr 1fr; grid-template-rows: minmax(220px, auto); border-top: 1px solid var(--line); border-left: 0; }
+  .workspace-side-stack .workspace-pane + .workspace-pane { border-top: 0; border-left: 1px solid var(--line); }
+  .workspace-console { height: calc(100% - 48px); min-height: 180px; }
+}
+@media (max-width: 720px) {
+  .portal-shell.workspace-active, .portal-shell:has(.workspace-view:not([hidden])) { height: auto; min-height: calc(100vh - 56px); }
+  .workspace-view { display: block; height: auto; min-height: calc(100vh - 56px); }
+  .workspace-heading { min-height: 54px; align-items: flex-start; padding: .65rem .7rem; }
+  .workspace-context { display: grid; gap: .15rem; }
+  .workspace-mode { font-size: .57rem; }
+  .workspace-mode::after { display: none; }
+  .workspace-context p { max-width: calc(100vw - 150px); }
+  .commit-badge { display: none; }
+  .workspace-layout { display: block; min-height: auto; overflow: visible; }
+  .workspace-pane + .workspace-pane, .workspace-side-stack { border-top: 1px solid var(--line); border-left: 0; }
+  .repository-pane { max-height: 320px; }
+  .workspace-tree { height: 190px; }
+  .editor-host { min-height: 380px; height: 380px; }
+  .workspace-side-stack { display: block; }
+  .workspace-side-stack .workspace-pane + .workspace-pane { border-top: 1px solid var(--line); border-left: 0; }
+  .workspace-console { height: 230px; }
+}

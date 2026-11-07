@@ -1,0 +1,39 @@
+{
+  "schema_version": 1,
+  "schemas": [
+    {
+      "id": "connection",
+      "title": "Connection",
+      "content_type": "connection",
+      "path": "schemas/connection.schema.json",
+      "version": "1.0",
+      "schema_version": "1.0"
+    },
+    {
+      "id": "managed-repository",
+      "title": "Managed Repository",
+      "content_type": "managed_repository",
+      "path": "schemas/managed-repository.schema.json",
+      "version": "1.0",
+      "schema_version": "1.0"
+    }
+  ],
+  "rules": [
+    {
+      "id": "connection",
+      "title": "Connection Rules",
+      "content_type": "connection",
+      "path": "schemas/connection.rules.md",
+      "version": "1.0",
+      "schema_version": "1.0"
+    },
+    {
+      "id": "managed-repository",
+      "title": "Managed Repository Rules",
+      "content_type": "managed_repository",
+      "path": "schemas/managed-repository.rules.md",
+      "version": "1.0",
+      "schema_version": "1.0"
+    }
+  ]
+}
